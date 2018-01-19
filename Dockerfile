@@ -1,16 +1,4 @@
-FROM maven:3.5-jdk-8 as builder
-WORKDIR /iri
-COPY . /iri
-RUN mvn clean package
-
-FROM openjdk:jre-slim
-WORKDIR /iri
-COPY docker-entrypoint.sh .
-RUN ["chmod", "+x", "docker-entrypoint.sh"]
-
-COPY --from=builder /iri/target/iri-1.4.1.4.jar iri.jar
-COPY logback.xml /iri
-VOLUME /iri
+FROM iotaledger/iri:latest
 
 EXPOSE 14265
 EXPOSE 14777/udp
@@ -30,4 +18,3 @@ ENV PORT= \
     DNS_RESOLUTION_FALSE=
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
-
